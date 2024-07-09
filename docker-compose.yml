@@ -1,0 +1,43 @@
+services:
+    web:
+        image: app-name:latest
+        build:
+            target: web
+            context: .
+        env_file:
+            - .env
+        ports:
+            - "83:80"
+        volumes:
+            - .:/var/www/html
+        depends_on:
+            - db
+
+    db:
+        # platform: "linux/arm64"
+        image: mysql:latest
+        env_file:
+            - .env
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: apiSepatu 
+            # MYSQL_USER: root
+            # MYSQL_PASSWORD: ${DB_PASSWORD}
+        ports:
+            - "3306:3306"
+        volumes:
+            - dbdata:/var/lib/mysql
+
+    phpmyadmin:
+        container_name: php_container
+        image: "phpmyadmin:latest"
+        ports:
+            - "84:80"
+        environment:
+            PMA_HOST: db
+            PMA_USER: root
+            PMA_PASSWORD: root
+        
+
+volumes:
+    dbdata:
